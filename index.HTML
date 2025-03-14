@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Online File Converter - PDF to Word, Image Compression, Video to MP3, Audio to Text, Image Resizer">
+    <meta name="keywords" content="file converter, pdf to word, image compressor, video to mp3, mp3 to text, image resizer">
+    <title>File Converter | AI-powered Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>File Converter AI</h1>
+    </header>
+
+    <main>
+        <section class="converter">
+            <h2>Select Conversion Type</h2>
+            <select id="conversionType">
+                <option value="pdfToWord">PDF to Word</option>
+                <option value="compressImage">Reduce Image Size</option>
+                <option value="videoToMp3">Video to MP3</option>
+                <option value="audioToText">Video/MP3 to Text</option>
+                <option value="resizeImage">Image Resizer</option>
+            </select>
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.png,.mp4,.mp3" required>
+            <button onclick="convertFile()">Convert</button>
+        </section>
+
+        <section id="result">
+            <h3>Output File:</h3>
+            <a id="downloadLink" style="display:none;" download>Download Converted File</a>
+        </section>
+
+        <aside class="ads">
+            <h3>Advertisement</h3>
+            <img src="https://placehold.co/300x250" alt="Ad 1">
+            <img src="https://placehold.co/300x250" alt="Ad 2">
+        </aside>
+    </main>
+
+    <footer>
+        <p>© 2025 File Converter AI. All rights reserved.</p>
+    </footer>
+</body>
+</html>
