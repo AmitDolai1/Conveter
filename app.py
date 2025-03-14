@@ -10,6 +10,14 @@ import uvicorn
 
 from fastapi.middleware.cors import CORSMiddleware
 
+import atexit
+import shutil
+
+@atexit.register
+def cleanup():
+    if os.path.exists(UPLOAD_DIR):
+        shutil.rmtree(UPLOAD_DIR)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
