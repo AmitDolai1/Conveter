@@ -7,6 +7,7 @@ import speech_recognition as sr
 import os
 import uuid
 import uvicorn
+from pydub import AudioSegment
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -63,14 +64,18 @@ async def convert_file(file: UploadFile = File(...), type: str = Form(...)):
 
     # Audio to Text
     elif type == "audioToText":
+    
+    
+        # Convert to WAV first
+        audio = AudioSegment.from_file(file_path)
+        wav_path = file_path + ".wav"
+        audio.export(wav_path, format="wav")
+        
         recognizer = sr.Recognizer()
-        with sr.AudioFile(file_path) as source:
+        with sr.AudioFile(wav_path) as source:
             audio = recognizer.record(source)
-        text = recognizer.recognize_google(audio)
-        text_filename = file_path.replace(".wav", ".txt")
-        with open(text_filename, "w") as f:
-            f.write(text)
-        return FileResponse(text_filename, filename="transcription.txt")
+    
+    text = recognizer.recognize_google(audio)
 
     # Image Resizing
     elif type == "resizeImage":
