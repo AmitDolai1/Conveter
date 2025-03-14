@@ -1,0 +1,57 @@
+from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.responses import FileResponse
+from pdf2docx import Converter
+from PIL import Image
+import moviepy.editor as mp
+import speech_recognition as sr
+import os
+import uuid
+import uvicorn
+# from fastapi import FastAPI
+# import moviepy.editor
+# print("MoviePy is installed correctly!")
+app = FastAPI()
+
+@app.post("/convert")
+async def convert_file(file: UploadFile = File(...), type: str = Form(...)):
+    filename = f"converted_{uuid.uuid4().hex}"
+    
+    if type == "pdfToWord":
+        docx_filename = filename + ".docx"
+        with open(file.filename, "wb") as f:
+            f.write(file.file.read())
+        cv = Converter(file.filename)
+        cv.convert(docx_filename)
+        cv.close()
+        return FileResponse(docx_filename, filename="converted.docx")
+    
+    elif type == "compressImage":
+        image = Image.open(file.file)
+        image.save(filename + ".jpg", quality=50, optimize=True)
+        return FileResponse(filename + ".jpg", filename="compressed.jpg")
+    
+    elif type == "videoToMp3":
+        video = mp.VideoFileClip(file.filename)
+        video.audio.write_audiofile(filename + ".mp3")
+        return FileResponse(filename + ".mp3", filename="audio.mp3")
+    
+    elif type == "audioToText":
+        recognizer = sr.Recognizer()
+        with sr.AudioFile(file.filename) as source:
+            audio = recognizer.record(source)
+        text = recognizer.recognize_google(audio)
+        with open(filename + ".txt", "w") as f:
+            f.write(text)
+        return FileResponse(filename + ".txt", filename="transcription.txt")
+    
+    elif type == "resizeImage":
+        image = Image.open(file.file)
+        image = image.resize((300, 300))
+        image.save(filename + ".jpg")
+        return FileResponse(filename + ".jpg", filename="resized.jpg")
+    
+    return {"error": "Invalid conversion type"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
