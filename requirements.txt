@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pdf2docx
+pillow
+moviepy
+speechrecognition
+pydub
+python-multipart
+pip install moviepy==1.0.3
